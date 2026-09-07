@@ -1,0 +1,388 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SalesChannel {
+  ONLINE_STORE
+  WHATSAPP
+  INSTAGRAM
+  X
+  WALK_IN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PAID // Kept temporarily for backward-compatible migration of legacy rows
+  CRAFTING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  FAILED // Kept temporarily for backward-compatible migration of legacy rows
+}
+
+enum PaymentStatus {
+  UNPAID
+  PENDING
+  PAID
+  PARTIALLY_PAID
+  FAILED
+  REFUNDED
+  SUCCESS // Kept temporarily for backward-compatible migration of legacy rows
+  ABANDONED // Kept temporarily for backward-compatible migration of legacy rows
+}
+
+enum PaymentMethod {
+  PAYSTACK
+  BANK_TRANSFER
+  CASH
+  POS
+}
+
+enum PaymentProvider {
+  PAYSTACK
+  INTERNAL
+}
+
+enum FulfillmentType {
+  DELIVERY
+  PICKUP
+}
+
+enum ReservationStatus {
+  ACTIVE
+  CONVERTED
+  EXPIRED
+  RELEASED
+}
+
+enum StockMovementType {
+  SALE
+  RESTOCK
+  CANCELLATION
+  RETURN
+  ADJUSTMENT
+}
+
+enum RefundStatus {
+  NOT_REFUNDED
+  PENDING
+  PARTIALLY_REFUNDED
+  REFUNDED
+}
+
+model Collection {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  image       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@map("collections")
+}
+
+model Product {
+  id             String                 @id @default(cuid())
+  slug           String                 @unique
+  name           String
+  description    String?
+  price          Decimal                @db.Decimal(12, 2)
+  images         String[]               @default([])
+  colors         String[]               @default([])
+  sizes          String[]               @default([])
+  featured       Boolean                @default(false)
+  stock          Int                    @default(0) // Physical stock count (must remain >= 0)
+  rating         Float                  @default(5.0)
+  isArchived     Boolean                @default(false)
+  deletedAt      DateTime?
+  collectionId   String?
+  collection     Collection?            @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  orderItems     OrderItem[]
+  reviews        Review[]
+  reservations   InventoryReservation[]
+  stockMovements StockMovement[]
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@index([isArchived, createdAt])
+  @@index([featured, isArchived])
+  @@index([collectionId, isArchived])
+  @@map("products")
+}
+
+model Review {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name            String
+  email           String?
+  rating          Int      @default(5)
+  title           String?
+  comment         String
+  isVerifiedBuyer Boolean  @default(false)
+  helpfulCount    Int      @default(0)
+  date            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  @@index([productId, createdAt])
+  @@map("reviews")
+}
+
+model Customer {
+  id              String    @id @default(cuid())
+  email           String?   @unique
+  phone           String?   // Canonical E.164 (+234...)
+  firstName       String
+  lastName        String
+  instagramHandle String?
+  xHandle         String?
+  addresses       Address[]
+  orders          Order[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([phone])
+  @@index([createdAt])
+  @@map("customers")
+}
+
+model Address {
+  id         String    @id @default(cuid())
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  address    String
+  city       String
+  state      String
+  country    String    @default("Nigeria")
+  orders     Order[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([customerId])
+  @@map("addresses")
+}
+
+model Order {
+  id               String                 @id @default(cuid())
+  orderNumber      String                 @unique
+  salesChannel     SalesChannel           @default(ONLINE_STORE)
+  status           OrderStatus            @default(PENDING)
+  paymentStatus    PaymentStatus          @default(UNPAID)
+  fulfillmentType  FulfillmentType        @default(DELIVERY)
+  refundStatus     RefundStatus           @default(NOT_REFUNDED)
+  subtotal         Decimal                @db.Decimal(12, 2)
+  discount         Decimal                @default(0) @db.Decimal(12, 2)
+  shippingFee      Decimal                @default(0) @db.Decimal(12, 2)
+  total            Decimal                @db.Decimal(12, 2)
+  amountPaid       Decimal                @default(0) @db.Decimal(12, 2)
+  amountRefunded   Decimal                @default(0) @db.Decimal(12, 2)
+  customerId       String?
+  customer         Customer?              @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerEmail    String?
+  customerName     String
+  customerPhone    String?
+  addressId        String?
+  address          Address?               @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  shippingAddress  String?
+  shippingCity     String?
+  shippingState    String?
+  paymentReference String?                @unique
+  paymentMethod    String?
+  paidAt           DateTime?
+  stockDeducted    Boolean                @default(false)
+  paidNotificationsSent Boolean           @default(false)
+  clientRequestId  String?                @unique
+  createdById      String?
+  createdBy        AdminUser?             @relation("OrderCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  internalNotes    String?
+  isArchived       Boolean                @default(false)
+  deletedAt        DateTime?
+  items            OrderItem[]
+  payments         Payment[]
+  reservations     InventoryReservation[]
+  stockMovements   StockMovement[]
+  transactions     PaymentTransaction[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  @@index([salesChannel, createdAt])
+  @@index([paymentStatus, status])
+  @@index([paidAt])
+  @@index([isArchived, createdAt])
+  @@index([status, createdAt])
+  @@index([customerId])
+  @@index([customerPhone])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String   @id @default(cuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String?
+  product      Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName  String
+  productSlug  String?
+  productImage String?
+  size         String
+  quantity     Int      @default(1)
+  unitPrice    Decimal  @db.Decimal(12, 2)
+  totalPrice   Decimal  @db.Decimal(12, 2)
+  createdAt    DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Payment {
+  id          String          @id @default(cuid())
+  orderId     String
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount      Decimal         @db.Decimal(12, 2)
+  currency    String          @default("NGN")
+  method      PaymentMethod
+  provider    PaymentProvider @default(INTERNAL)
+  status      PaymentStatus   @default(PENDING)
+  reference   String?         @unique
+  paidAt      DateTime?
+  verifiedBy  String?         // Admin user ID or "SYSTEM_PAYSTACK"
+  verifiedAt  DateTime?
+  notes       String?
+  rawResponse Json?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([orderId])
+  @@index([status])
+  @@index([reference])
+  @@map("payments")
+}
+
+model InventoryReservation {
+  id          String            @id @default(cuid())
+  productId   String
+  product     Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderId     String?
+  order       Order?            @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  quantity    Int
+  status      ReservationStatus @default(ACTIVE)
+  reservedAt  DateTime          @default(now())
+  expiresAt   DateTime
+  reservedBy  String?           // Admin user ID
+  reason      String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([productId, status])
+  @@index([expiresAt, status])
+  @@index([orderId])
+  @@map("inventory_reservations")
+}
+
+model StockMovement {
+  id            String            @id @default(cuid())
+  productId     String
+  product       Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderId       String?
+  order         Order?            @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  quantity      Int               // + for physical restock/cancellation, - for physical sale
+  type          StockMovementType
+  previousStock Int
+  newStock      Int
+  reference     String?           // Order number or adjustment ID
+  reason        String?
+  createdBy     String?           // Admin user ID or "SYSTEM"
+  createdAt     DateTime          @default(now())
+
+  @@index([productId, createdAt])
+  @@index([type])
+  @@index([orderId])
+  @@map("stock_movements")
+}
+
+model PaymentTransaction {
+  id          String        @id @default(cuid())
+  orderId     String
+  order       Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  reference   String        @unique
+  gateway     String        @default("PAYSTACK")
+  status      String        @default("PENDING") // Raw gateway status string
+  amount      Decimal       @db.Decimal(12, 2)
+  currency    String        @default("NGN")
+  channel     String?
+  rawResponse Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([orderId])
+  @@map("payment_transactions")
+}
+
+model AdminUser {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String   // Salted PBKDF2 Web Crypto Hash
+  salt          String   // Per-user cryptographic salt
+  role          String   @default("SUPER_ADMIN") // SUPER_ADMIN, MANAGER, ARTISAN
+  isActive      Boolean  @default(true)
+  createdOrders Order[]  @relation("OrderCreator")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  userEmail String?
+  action    String   // e.g. "ORDER_STATUS_UPDATE", "PRODUCT_RESTORE", "ADMIN_LOGIN"
+  entity    String   // e.g. "Order", "Product", "Auth"
+  entityId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([entity, entityId])
+  @@map("audit_logs")
+}
+
+model HeroSlide {
+  id        String   @id @default(cuid())
+  title     String
+  subtitle  String
+  badge     String
+  tag       String?
+  price     String?
+  link      String
+  image     String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@map("hero_slides")
+}
+
+model AnnouncementBar {
+  id        String   @id @default("default")
+  isEnabled Boolean  @default(true)
+  speed     Int      @default(25) // Duration in seconds for full loop (15s fast, 25s normal, 35s slow)
+  messages  String[] @default([])
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("announcement_bar")
+}
