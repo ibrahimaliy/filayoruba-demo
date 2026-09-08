@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -40,8 +40,39 @@ function LoginForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
   const [resetSuccess, setResetSuccess] = useState<string | null>(null);
+
+  const handleDemoLogin = async () => {
+    setIsDemoLoading(true);
+    setError(null);
+    setSuccessNotice("Authorizing Portfolio Demo Sandbox session...");
+
+    try {
+      const res = await fetch("/api/admin/auth/demo-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Failed to initialize demo sandbox session.");
+        setIsDemoLoading(false);
+        setSuccessNotice(null);
+        return;
+      }
+
+      setSuccessNotice("Access granted! Redirecting to Operations Console...");
+      router.push(from);
+      router.refresh();
+    } catch {
+      setError("An unexpected network error occurred. Please try again.");
+      setIsDemoLoading(false);
+      setSuccessNotice(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -368,22 +399,42 @@ function LoginForm() {
         <div className="flex items-start gap-2.5">
           <Sparkles className="w-4 h-4 text-[#FED501] shrink-0 mt-0.5" />
           <div className="text-xs leading-relaxed">
-            <strong className="text-white font-semibold block mb-0.5">Portfolio Showcase Edition</strong>
-            Reviewing this system? You can test the live operations suite, inventory controls, and order dispatch alerts freely in this sandbox.
+            <strong className="text-white font-semibold block mb-0.5">Portfolio Showcase Sandbox</strong>
+            Reviewing this architecture? Test live omnichannel orders, inventory reservations, real-time analytics, and operational workflows with 1-click sandbox access.
           </div>
         </div>
         <button
           type="button"
-          onClick={() => {
-            setEmail("admin@filayoruba.com");
-            setPassword("filayoruba_admin_secret_key_2026");
-            setError(null);
-          }}
-          className="w-full py-2.5 px-3 rounded-xl bg-[#FED501] hover:bg-[#FED501]/90 text-black font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-[#FED501]/20 cursor-pointer active:scale-[0.99]"
+          onClick={handleDemoLogin}
+          disabled={isDemoLoading || isLoading}
+          className="w-full py-2.5 px-3 rounded-xl bg-[#FED501] hover:bg-[#FED501]/90 disabled:opacity-50 text-black font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-md shadow-[#FED501]/20 cursor-pointer active:scale-[0.99]"
         >
-          <KeyRound className="w-3.5 h-3.5" />
-          <span>Fill Demo Credentials (1-Click)</span>
+          {isDemoLoading ? (
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <span>Authorizing Demo Sandbox...</span>
+            </>
+          ) : (
+            <>
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>Instant 1-Click Demo Login</span>
+            </>
+          )}
         </button>
+        <div className="pt-1 flex items-center justify-between text-[11px] text-white/50 border-t border-white/5">
+          <span>Sandbox ID: <code className="text-amber-300/90 font-mono">demo@filayoruba.com</code></span>
+          <button
+            type="button"
+            onClick={() => {
+              setEmail("demo@filayoruba.com");
+              setPassword("fila_demo_reviewer_2026");
+              setError(null);
+            }}
+            className="text-amber-400/80 hover:text-amber-300 underline cursor-pointer"
+          >
+            Auto-Fill Form
+          </button>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">

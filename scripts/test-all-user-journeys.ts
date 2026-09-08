@@ -14,7 +14,7 @@ import { finalizeSuccessfulPayment } from "../src/server/services/payment.servic
 import { cancelCustomerOrder, createManualOrder, updateOrderStatus } from "../src/server/services/order.service";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "filayoruba_admin_secret_key_2026";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.DEMO_ADMIN_PASSWORD || "fila_demo_reviewer_2026";
 
 interface TestReport {
   name: string;

@@ -12,7 +12,8 @@ export interface AdminSessionPayload extends AdminSessionUser {
 }
 
 export const ADMIN_COOKIE_NAME = "filayoruba_admin_session";
-const DEFAULT_DEV_ADMIN_SECRET = "filayoruba_admin_secret_key_2026";
+export const DEFAULT_DEMO_PASSWORD = "fila_demo_reviewer_2026";
+const DEFAULT_DEV_ADMIN_SECRET = "dev_filayoruba_signing_secret_do_not_use_in_prod";
 
 /**
  * Constant-time string comparison safe for Edge runtimes (protects against timing attacks)
@@ -29,25 +30,34 @@ export function timingSafeEqualStrings(a: string, b: string): boolean {
 const INSECURE_DEV_SECRETS = [
   "filayoruba_admin_secret_key_2026",
   "tradedge_admin_secret_key_2026",
+  "dev_filayoruba_signing_secret_do_not_use_in_prod",
 ];
 
 export function getAdminSecret(): string {
-  const secret = process.env.ADMIN_SECRET_KEY || process.env.ADMIN_PASSWORD;
+  const secret = process.env.ADMIN_SECRET_KEY;
   if (secret && secret.length >= 16 && !INSECURE_DEV_SECRETS.includes(secret)) {
     return secret;
   }
-  if (process.env.NODE_ENV === 'production') {
-    console.warn('[SECURITY WARNING] ADMIN_SECRET_KEY is missing or weak in production environment variables. Using fallback.');
+  if (process.env.NODE_ENV === "production") {
+    console.warn("[SECURITY WARNING] ADMIN_SECRET_KEY is missing or weak in production environment variables. Using fallback.");
   }
   return secret || DEFAULT_DEV_ADMIN_SECRET;
 }
 
 /**
  * Returns the human master admin password used for emergency recovery / seeding
+ * Strictly checks ADMIN_PASSWORD without reusing ADMIN_SECRET_KEY.
  */
 export function getMasterAdminPassword(): string {
-  const pass = process.env.ADMIN_PASSWORD || process.env.ADMIN_SECRET_KEY;
-  return pass || DEFAULT_DEV_ADMIN_SECRET;
+  const pass = process.env.ADMIN_PASSWORD;
+  return pass || "";
+}
+
+/**
+ * Returns the dedicated throwaway password for portfolio reviewers / demo access
+ */
+export function getDemoAdminPassword(): string {
+  return process.env.DEMO_ADMIN_PASSWORD || DEFAULT_DEMO_PASSWORD;
 }
 
 /**

@@ -132,10 +132,14 @@ APP_URL="http://localhost:3000"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # -------------------------------------------------------------
-# Admin Portal Authentication
+# Admin Portal Authentication & Security
 # -------------------------------------------------------------
-ADMIN_PASSWORD=filayoruba_admin_secret_key_2026
-ADMIN_SECRET_KEY=filayoruba_admin_secret_key_2026
+# Generate distinct random secrets for production/deployment:
+ADMIN_PASSWORD="<strong-random-password>"
+ADMIN_SECRET_KEY="<64-char-random-hex-signing-secret>"
+
+# Dedicated throwaway sandbox credential for portfolio evaluators
+DEMO_ADMIN_PASSWORD="fila_demo_reviewer_2026"
 
 # -------------------------------------------------------------
 # Transactional Email (Optional - logs to terminal if omitted)

@@ -5,6 +5,7 @@ import {
   createSessionToken,
   ensureDefaultAdminUser,
   getMasterAdminPassword,
+  getDemoAdminPassword,
   timingSafeEqualStrings,
   ADMIN_COOKIE_NAME,
 } from "@/server/auth";
@@ -99,10 +100,23 @@ export async function POST(req: Request) {
       }
     }
 
-    // B. Fallback to master admin password (only allowed for break-glass recovery when account is not deactivated)
+    // B. Check for dedicated throwaway demo reviewer account
+    if (!authenticatedAdmin && targetEmail === "demo@filayoruba.com") {
+      const demoPass = getDemoAdminPassword();
+      if (timingSafeEqualStrings(password, demoPass)) {
+        authenticatedAdmin = {
+          id: dbAdmin?.id || "demo-showcase-reviewer",
+          email: "demo@filayoruba.com",
+          name: "Portfolio Demo Reviewer",
+          role: "SUPER_ADMIN",
+        };
+      }
+    }
+
+    // C. Fallback to master admin password (only allowed for break-glass recovery when account is not deactivated)
     if (!authenticatedAdmin && (!dbAdmin || dbAdmin.isActive)) {
       const masterPass = getMasterAdminPassword();
-      if (timingSafeEqualStrings(password, masterPass)) {
+      if (masterPass && timingSafeEqualStrings(password, masterPass)) {
         authenticatedAdmin = {
           id: dbAdmin?.id,
           email: targetEmail || "superadmin@filayoruba.com",

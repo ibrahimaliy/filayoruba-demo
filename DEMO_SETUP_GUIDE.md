@@ -1,4 +1,4 @@
-﻿# 👑 Fìlà Yorùbá — Showcase / Demo Edition Setup Guide
+# 👑 Fìlà Yorùbá — Showcase / Demo Edition Setup Guide
 
 Welcome to the public showcase edition of **Fìlà Yorùbá**. This version is specifically optimized for portfolio reviewers, hiring managers, and prospective clients to interact with both the luxury customer storefront and the live omnichannel back-office operations console without exposing commercial production data.
 
@@ -60,16 +60,19 @@ git push -u origin main
 
 ### 2. Import into Vercel
 1. In the Vercel dashboard, click **"Add New" ➔ "Project"** and select `filayoruba-demo`.
-2. Under **Environment Variables**, copy all values from your `.env`:
-   - `DATABASE_URL` (Pooled Neon string)
-   - `DIRECT_URL` (Direct Neon string)
-   - `PAYSTACK_SECRET_KEY` (`sk_test_...`)
-   - `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` (`pk_test_...`)
+2. Under **Environment Variables**, copy values from your secure `.env`:
+   - `DATABASE_URL` (Neon PostgreSQL connection string)
+   - `DIRECT_URL` (Direct Neon PostgreSQL connection string)
+   - `PAYSTACK_SECRET_KEY` (`sk_test_...` from Paystack Dashboard)
+   - `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` (`pk_test_...` from Paystack Dashboard)
    - `APP_URL` (`https://<your-vercel-domain>.vercel.app`)
    - `NEXT_PUBLIC_APP_URL` (`https://<your-vercel-domain>.vercel.app`)
-   - `ADMIN_PASSWORD` (`filayoruba_admin_secret_key_2026`)
-   - `ADMIN_SECRET_KEY` (`filayoruba_admin_secret_key_2026`)
+   - `ADMIN_PASSWORD` (Strong random password for superadmin recovery)
+   - `ADMIN_SECRET_KEY` (Strong 64-char random hex key for signing session tokens)
+   - `DEMO_ADMIN_PASSWORD` (`fila_demo_reviewer_2026` throwaway password for portfolio evaluators)
 3. Click **Deploy**.
+
+> 💡 **Reviewer Sandbox Note:** Reviewers evaluating your portfolio can use the built-in **"Instant 1-Click Demo Login"** on the admin login page (`/admin/login`). Your actual `ADMIN_PASSWORD` and `ADMIN_SECRET_KEY` remain 100% private.
 
 ---
 

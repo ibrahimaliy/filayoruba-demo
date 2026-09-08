@@ -4,6 +4,7 @@ import {
   hashPassword,
   getAdminSecret,
   getMasterAdminPassword,
+  getDemoAdminPassword,
 } from "./auth-edge";
 
 export * from "./auth-edge";
@@ -15,7 +16,7 @@ export async function ensureDefaultAdminUser() {
   try {
     const count = await db.adminUser.count();
     if (count === 0) {
-      const defaultPassword = getMasterAdminPassword();
+      const defaultPassword = getMasterAdminPassword() || crypto.randomUUID();
       const salt = crypto.randomUUID();
       const passwordHash = await hashPassword(defaultPassword, salt);
 
@@ -29,6 +30,27 @@ export async function ensureDefaultAdminUser() {
         },
       });
       console.log("🛡️ [SECURITY] Auto-seeded default Super Admin (admin@filayoruba.com).");
+    }
+
+    // Ensure dedicated sandbox demo reviewer user exists
+    const demoUser = await db.adminUser.findFirst({
+      where: { email: { equals: "demo@filayoruba.com", mode: "insensitive" } },
+    });
+    if (!demoUser) {
+      const demoPass = getDemoAdminPassword();
+      const salt = crypto.randomUUID();
+      const passwordHash = await hashPassword(demoPass, salt);
+
+      await db.adminUser.create({
+        data: {
+          email: "demo@filayoruba.com",
+          name: "Portfolio Demo Reviewer",
+          password: passwordHash,
+          salt,
+          role: "SUPER_ADMIN",
+        },
+      });
+      console.log("🛡️ [SECURITY] Auto-seeded Portfolio Demo Reviewer (demo@filayoruba.com).");
     }
   } catch (error) {
     // Non-blocking in case of connection latency

@@ -14,7 +14,7 @@ import { redisGet } from "../src/server/redis";
 import { createVerifiedOrder, saveOrder } from "../src/server/services/order.service";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || "sk_test_5e6ada0f6f70389b7db88598f92c9405c63f00d4";
+const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || "sk_test_dummy_mock_secret_for_tests";
 
 interface StepResult {
   name: string;
