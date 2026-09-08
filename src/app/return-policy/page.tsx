@@ -202,10 +202,10 @@ export default function ReturnPolicyPage() {
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-7">
               To initiate a return, please contact our Customer Care team at{" "}
               <a
-                href="mailto:filaomoyoruba@gmail.com?subject=Return%20Request%20-%20F%C3%ACl%C3%A0%20Yor%C3%B9b%C3%A1"
+                href="mailto:demo@filayoruba.com?subject=Return%20Request%20-%20F%C3%ACl%C3%A0%20Yor%C3%B9b%C3%A1"
                 className="font-bold text-[#000000] underline hover:text-[#FED501] transition-colors"
               >
-                filaomoyoruba@gmail.com
+                demo@filayoruba.com
               </a>{" "}
               with your order number and reason for return. Upon approval, you will receive detailed return instructions.
               Customers are responsible for return shipping costs unless the return is due to an error on our part.
@@ -476,11 +476,11 @@ export default function ReturnPolicyPage() {
               Primary Returns Email
             </span>
             <a
-              href="mailto:filaomoyoruba@gmail.com?subject=Return%20or%20Exchange%20Inquiry%20-%20F%C3%ACl%C3%A0%20Yor%C3%B9b%C3%A1"
+              href="mailto:demo@filayoruba.com?subject=Return%20or%20Exchange%20Inquiry%20-%20F%C3%ACl%C3%A0%20Yor%C3%B9b%C3%A1"
               className="text-sm sm:text-base font-bold text-[#FED501] hover:underline flex items-center gap-1.5"
             >
               <Mail className="w-4 h-4 shrink-0" />
-              <span>filaomoyoruba@gmail.com</span>
+              <span>demo@filayoruba.com</span>
             </a>
           </div>
 
@@ -489,14 +489,14 @@ export default function ReturnPolicyPage() {
               Official Policy URL
             </span>
             <span className="text-sm font-mono text-white/90 font-medium block truncate">
-              filayoruba.com/return-and-refund
+              /return-policy
             </span>
           </div>
         </div>
 
         <div className="pt-2 flex flex-wrap items-center gap-3 relative z-10">
           <a
-            href="mailto:filaomoyoruba@gmail.com?subject=Return%20Request%20[Order%20Number]&body=Hello%20F%C3%ACl%C3%A0%20Yor%C3%B9b%C3%A1%20Concierge,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20return/exchange%20for%20Order%20Number:%20%0D%0AReason:%20"
+            href="mailto:demo@filayoruba.com?subject=Return%20Request%20[Order%20Number]&body=Hello%20F%C3%ACl%C3%A0%20Yor%C3%B9b%C3%A1%20Concierge,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20return/exchange%20for%20Order%20Number:%20%0D%0AReason:%20"
             className="px-6 py-3 rounded-xl bg-[#FED501] hover:bg-[#EAB308] text-[#000000] text-xs font-bold transition-all shadow-md inline-flex items-center gap-2 cursor-pointer"
           >
             <Mail className="w-4 h-4" />

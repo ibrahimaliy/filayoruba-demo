@@ -34,21 +34,21 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold">Email</h3>
                 <p className="text-muted-foreground">
-                  hello@filayoruba.com
+                  demo@filayoruba.com
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold">Phone</h3>
+                <h3 className="font-semibold">Phone / Support</h3>
                 <p className="text-muted-foreground">
-                  +234 xxx xxx xxxx
+                  +234 (0) 800 FILA DEMO (Showcase Mode)
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold">WhatsApp</h3>
+                <h3 className="font-semibold">Portfolio Sandbox</h3>
                 <p className="text-muted-foreground">
-                  Available for quick support.
+                  Available for evaluator review &amp; inquiries.
                 </p>
               </div>
             </div>

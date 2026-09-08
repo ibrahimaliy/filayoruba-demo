@@ -169,7 +169,7 @@ export default function OrderReceiptPrint({ order }: OrderReceiptPrintProps) {
           Each Fìlà Yorùbá cap is handwoven and molded. Thank you for preserving indigenous Yoruba textile heritage.
         </p>
         <p className="text-[9px] text-slate-400">
-          Need support? Email concierge@filayoruba.com or visit https://filayoruba.com/track-order
+          Need support? Email demo@filayoruba.com or visit /track-order
         </p>
       </div>
     </div>

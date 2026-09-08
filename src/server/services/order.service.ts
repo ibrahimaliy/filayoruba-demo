@@ -1696,7 +1696,7 @@ export async function cancelCustomerOrder(params: CancelOrderParams): Promise<{
     return {
       success: false,
       message:
-        "Artisan handcrafting has already commenced on your bespoke cap. Pieces currently on the loom cannot be self-cancelled. Please contact Customer Support at filaomoyoruba@gmail.com for assistance.",
+        "Artisan handcrafting has already commenced on your bespoke cap. Pieces currently on the loom cannot be self-cancelled. Please contact Customer Support at demo@filayoruba.com for assistance.",
     };
   }
 

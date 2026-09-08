@@ -161,27 +161,34 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4 & 5: Bespoke Guild Newsletter & Direct Line */}
+          {/* Column 4: Showcase & Inquiries */}
           <div className="lg:col-span-1 space-y-4">
             <h4 className="text-xs font-bold uppercase tracking-widest text-[#FED501]">
-              Direct Line
+              Demo Concierge
             </h4>
             <ul className="space-y-2.5 text-xs text-white/70">
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#FED501] shrink-0 mt-0.5" />
-                <span>No. 9, Gusau Street, War College Estate, 3rd Avenue, Gwarinpa,Abuja</span>
+                <span>Lagos &amp; Abuja, Nigeria (Portfolio Demo)</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#FED501] shrink-0" />
-                <a href="mailto:filaomoyoruba@gmail.com" className="hover:text-white hover:underline transition-colors">
-                  filaomoyoruba@gmail.com
+                <a href="mailto:demo@filayoruba.com" className="hover:text-white hover:underline transition-colors">
+                  demo@filayoruba.com
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#FED501] shrink-0" />
-                <a href="tel:+2348167866669" className="hover:text-white hover:underline transition-colors">
-                  +234 (0)816 786 6669
-                </a>
+                <span className="text-white/60">+234 (0) 800 FILA DEMO</span>
+              </li>
+              <li className="pt-1">
+                <Link
+                  href="/admin/login"
+                  className="text-[#FED501] font-bold hover:underline transition-colors inline-flex items-center gap-1.5"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Admin Sandbox ⚡</span>
+                </Link>
               </li>
             </ul>
           </div>
@@ -190,7 +197,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50">
           <p>
-            &copy; {new Date().getFullYear()} Fìlà Yorùbá Luxury Headwear House. Handcrafted with pride in Nigeria.
+            &copy; {new Date().getFullYear()} Fìlà Yorùbá — Showcase Edition. Portfolio Demonstration.
           </p>
           <div className="flex items-center gap-6">
             <Link href="/return-policy" className="hover:text-white transition-colors">

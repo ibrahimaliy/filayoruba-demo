@@ -28,7 +28,7 @@ export interface SendEmailResult {
 // EMAIL_FROM can be set to "Fìlà Yorùbá <orders@filayoruba.com>".
 const FALLBACK_SANDBOX_FROM = "Fìlà Yorùbá <onboarding@resend.dev>";
 const DEFAULT_FROM = process.env.EMAIL_FROM || FALLBACK_SANDBOX_FROM;
-const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || "ially4198@gmail.com";
+const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || "demo@filayoruba.com";
 const DEFAULT_REPLY_TO = "orders@filayoruba.com";
 
 /**

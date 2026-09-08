@@ -63,6 +63,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  if (!process.env.DATABASE_URL && !process.env.DIRECT_URL) {
+    return staticRoutes;
+  }
+
   try {
     const [products, collections] = await Promise.all([
       db.product.findMany({
@@ -90,7 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [...staticRoutes, ...productRoutes, ...collectionRoutes];
   } catch (err) {
-    console.warn("Failed to dynamically generate sitemap from database:", err);
+    console.warn("Database unreachable during sitemap generation, falling back to static routes:", (err as Error)?.message || err);
     return staticRoutes;
   }
 }

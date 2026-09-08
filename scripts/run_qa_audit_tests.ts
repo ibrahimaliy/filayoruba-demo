@@ -31,15 +31,15 @@ async function runTests() {
   assertTest(
     "Storefront / Footer",
     "Footer email link is not a placeholder and points to valid mailto",
-    footerContent.includes('href="mailto:filaomoyoruba@gmail.com"') && !footerContent.includes("[EMAIL_ADDRESS]"),
-    footerContent.includes("[EMAIL_ADDRESS]") ? "Found literal [EMAIL_ADDRESS] placeholder" : "Correctly set to mailto:filaomoyoruba@gmail.com"
+    footerContent.includes('href="mailto:demo@filayoruba.com"') && !footerContent.includes("[EMAIL_ADDRESS]"),
+    footerContent.includes("[EMAIL_ADDRESS]") ? "Found literal [EMAIL_ADDRESS] placeholder" : "Correctly set to mailto:demo@filayoruba.com"
   );
 
   assertTest(
     "Storefront / Footer",
-    "Footer phone link matches displayed number (+2348167866669)",
-    footerContent.includes('href="tel:+2348167866669"') && footerContent.includes("+234 (0)816 786 6669"),
-    "href='tel:+2348167866669' matches displayed +234 (0)816 786 6669"
+    "Footer phone link matches demo support number",
+    footerContent.includes("+234 (0) 800 FILA DEMO"),
+    "Footer displays demo showcase helpline"
   );
 
   // 2. SEO & METADATA
