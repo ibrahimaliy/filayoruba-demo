@@ -4,7 +4,7 @@ export default defineConfig({
   // Declare your Neon services here
   auth: true,
   // Branch policy: per-branch tuning
-  branch: (branch) => {
+  branch: (branch: any) => {
     if (branch.isDefault) {
       // Default branch: no overrides, uses project defaults
       return {};

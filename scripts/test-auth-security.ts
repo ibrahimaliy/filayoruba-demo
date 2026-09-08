@@ -29,7 +29,7 @@ async function runSecurityTests() {
     console.log("--- 1. Testing getAdminSecret() & getMasterAdminPassword() Fail-Closed Behavior ---");
 
     // Case 1.1: Production with unset ADMIN_SECRET_KEY
-    process.env.NODE_ENV = "production";
+    (process.env as any).NODE_ENV = "production";
     delete process.env.ADMIN_SECRET_KEY;
     try {
       getAdminSecret();
@@ -75,7 +75,7 @@ async function runSecurityTests() {
     }
 
     // Case 1.6: Development fallback behavior
-    process.env.NODE_ENV = "development";
+    (process.env as any).NODE_ENV = "development";
     process.env.ADMIN_SECRET_KEY = "filayoruba_admin_secret_key_2026"; // insecure
     const devFallbackSecret = getAdminSecret();
     assert(
@@ -85,7 +85,7 @@ async function runSecurityTests() {
     );
 
     // Case 1.7: Valid key in production returns actual key
-    process.env.NODE_ENV = "production";
+    (process.env as any).NODE_ENV = "production";
     const validSecret = "81b284e1ca5505838e82ac52a0fac860d3de3fa117c6d635dcc5c149fd5370ef";
     const validPassword = "Fila_VIMku7EnmyiosYcl89a8MA!2026";
     process.env.ADMIN_SECRET_KEY = validSecret;
@@ -112,7 +112,7 @@ async function runSecurityTests() {
     // SUITE 2: Demo Login Backdoor Protection (Issue 1)
     // =========================================================================
     console.log("\n--- 3. Testing POST /api/admin/auth/demo-login Gating & Authentication ---");
-    process.env.NODE_ENV = "development";
+    (process.env as any).NODE_ENV = "development";
     process.env.ADMIN_SECRET_KEY = validSecret;
     process.env.ADMIN_PASSWORD = validPassword;
     process.env.DEMO_ADMIN_PASSWORD = "fila_demo_reviewer_2026";
