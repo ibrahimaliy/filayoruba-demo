@@ -120,7 +120,7 @@ export async function createHeroSlide(input: CreateHeroSlideInput): Promise<Hero
   const badge = input.badge.trim();
   const tag = input.tag?.trim() || null;
   const price = input.price?.trim() || null;
-  const link = input.link.trim();
+  const link = input.link?.trim() || "/products";
   const image = input.image.trim();
   const isActive = input.isActive !== undefined ? input.isActive : true;
 
@@ -295,7 +295,7 @@ export async function seedDefaultHeroSlides(): Promise<void> {
           badge: slide.badge,
           tag: slide.tag,
           price: slide.price,
-          link: slide.link,
+          link: slide.link || "/products",
           image: slide.image,
           order: slide.order,
           isActive: slide.isActive,
@@ -307,7 +307,7 @@ export async function seedDefaultHeroSlides(): Promise<void> {
           badge: slide.badge,
           tag: slide.tag,
           price: slide.price,
-          link: slide.link,
+          link: slide.link || "/products",
           image: slide.image,
           order: slide.order,
           isActive: slide.isActive,

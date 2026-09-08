@@ -5,7 +5,7 @@ export interface HeroSlide {
   badge: string;
   tag?: string | null;
   price?: string | null;
-  link: string;
+  link?: string | null;
   image: string;
   order: number;
   isActive: boolean;
@@ -19,7 +19,7 @@ export interface CreateHeroSlideInput {
   badge: string;
   tag?: string | null;
   price?: string | null;
-  link: string;
+  link?: string;
   image: string;
   order?: number;
   isActive?: boolean;

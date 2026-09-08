@@ -170,7 +170,7 @@ export default function PaymentStep() {
         </div>
 
         {/* Sandbox Test Card Helper */}
-        <div className="rounded-2xl border border-amber-300/80 bg-amber-50/80 p-4 text-xs text-amber-900 space-y-2.5">
+        {/* <div className="rounded-2xl border border-amber-300/80 bg-amber-50/80 p-4 text-xs text-amber-900 space-y-2.5">
           <div className="flex items-center gap-2 font-bold text-amber-950">
             <Sparkles className="h-4 w-4 text-amber-600 shrink-0" />
             <span>Showcase Sandbox Active — Test Payment Card Details</span>
@@ -183,7 +183,7 @@ export default function PaymentStep() {
             <div><span className="text-slate-500 block text-[9.5px] uppercase font-sans font-bold">EXPIRY &amp; CVV</span> 12/28 &amp; 408</div>
             <div><span className="text-slate-500 block text-[9.5px] uppercase font-sans font-bold">OTP / PIN</span> Any 4 digits (e.g. 1234)</div>
           </div>
-        </div>
+        </div> */}  
 
         {/* Navigation Buttons */}
         <div className="flex flex-col-reverse sm:flex-row sm:justify-between items-center gap-4 pt-4 border-t">

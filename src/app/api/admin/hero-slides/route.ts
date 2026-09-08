@@ -57,12 +57,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!link || typeof link !== "string" || !link.trim()) {
-      return NextResponse.json(
-        { success: false, message: "Slide target link is required" },
-        { status: 400 }
-      );
-    }
+    const targetLink = typeof link === "string" && link.trim() ? link.trim() : "/products";
 
     const created = await createHeroSlide({
       title: title.trim(),
@@ -70,7 +65,7 @@ export async function POST(req: NextRequest) {
       badge: badge.trim(),
       tag: tag ? tag.trim() : null,
       price: price ? price.trim() : null,
-      link: link.trim(),
+      link: targetLink,
       image: image.trim(),
       isActive: isActive !== undefined ? Boolean(isActive) : true,
       order: typeof order === "number" ? order : undefined,

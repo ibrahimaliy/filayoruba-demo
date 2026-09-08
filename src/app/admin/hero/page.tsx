@@ -2,14 +2,12 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
-import Link from "next/link";
 import {
   Sliders,
   Plus,
   Search,
   Edit2,
   Trash2,
-  ExternalLink,
   Sparkles,
   UploadCloud,
   X,
@@ -27,7 +25,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Database,
-  ArrowRight,
 } from "lucide-react";
 import { HeroSlide } from "@/types/hero";
 import { toast } from "sonner";
@@ -40,8 +37,8 @@ interface HeroSlideFormData {
   subtitle: string;
   badge: string;
   tag: string;
-  price: string;
-  link: string;
+  price?: string;
+  link?: string;
   image: string;
   isActive: boolean;
 }
@@ -51,20 +48,11 @@ const defaultFormData: HeroSlideFormData = {
   subtitle: "",
   badge: "Imperial Collection",
   tag: "Master Handcrafted",
-  price: "₦58,000",
+  price: "",
   link: "/products",
   image: "/images/hero/fila_alaari_crimson_gold_gobi.png",
   isActive: true,
 };
-
-const suggestedLinks = [
-  { label: "All Products", url: "/products" },
-  { label: "Collections Showcase", url: "/#collections" },
-  { label: "Alaari Crimson Fila", url: "/products/alaari-crimson-metallic-gold-pinstripe-fila" },
-  { label: "Emerald Silver Gobi", url: "/products/emerald-silver-handwoven-gobi-fila" },
-  { label: "Royal Maroon Velvet", url: "/products/royal-maroon-embroidered-velvet-fila" },
-  { label: "Sovereign Sányán Silk", url: "/products/sovereign-multi-stripe-sanyan-gobi-fila" },
-];
 
 export default function AdminHeroPage() {
   const [activeTab, setActiveTab] = useState<"slides" | "announcement">("slides");
@@ -172,7 +160,7 @@ export default function AdminHeroPage() {
       badge: slide.badge,
       tag: slide.tag || "",
       price: slide.price || "",
-      link: slide.link,
+      link: slide.link || "/products",
       image: slide.image,
       isActive: slide.isActive,
     });
@@ -271,10 +259,6 @@ export default function AdminHeroPage() {
     }
     if (!formData.badge.trim()) {
       setFormError("Promo badge tag is required.");
-      return;
-    }
-    if (!formData.link.trim()) {
-      setFormError("Target destination link is required.");
       return;
     }
 
@@ -683,22 +667,6 @@ export default function AdminHeroPage() {
                     {activeSlides[previewActiveSlide]?.subtitle}
                   </p>
                 </div>
-
-                <div className="flex items-center gap-3 pt-2">
-                  {activeSlides[previewActiveSlide]?.price && (
-                    <span className="text-xl font-extrabold text-[#FED501]">
-                      {activeSlides[previewActiveSlide]?.price}
-                    </span>
-                  )}
-                  <Link
-                    href={activeSlides[previewActiveSlide]?.link || "/products"}
-                    target="_blank"
-                    className="px-4 py-2 rounded-xl bg-[#FED501] text-[#000000] text-xs font-bold hover:bg-[#EAB308] transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <span>Test CTA Link</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
               </div>
 
               {/* Simulator Right Image Stage */}
@@ -916,16 +884,11 @@ export default function AdminHeroPage() {
                     )}
                   </div>
 
-                  {/* Promo Badge & Price */}
-                  <div className="absolute bottom-3.5 left-3.5 right-3.5 z-10 flex items-end justify-between text-white">
+                  {/* Promo Badge */}
+                  <div className="absolute bottom-3.5 left-3.5 right-3.5 z-10 text-white">
                     <span className="text-[10px] uppercase tracking-wider font-bold text-[#FED501] bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-xs">
                       {slide.badge}
                     </span>
-                    {slide.price && (
-                      <span className="text-base font-extrabold text-[#FED501] drop-shadow-sm">
-                        {slide.price}
-                      </span>
-                    )}
                   </div>
                 </div>
 
@@ -970,14 +933,6 @@ export default function AdminHeroPage() {
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      <Link
-                        href={slide.link}
-                        target="_blank"
-                        className="p-2 rounded-xl bg-slate-100 hover:bg-[#FED501] hover:text-[#000000] text-slate-700 transition-colors"
-                        title="Test Destination Link"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </Link>
                       <button
                         type="button"
                         onClick={() => handleOpenEdit(slide)}
@@ -1011,8 +966,6 @@ export default function AdminHeroPage() {
                   <th className="py-4 px-6 text-center">Order</th>
                   <th className="py-4 px-6">Slide</th>
                   <th className="py-4 px-6">Badge & Tag</th>
-                  <th className="py-4 px-6">Price</th>
-                  <th className="py-4 px-6">Target Link</th>
                   <th className="py-4 px-6 text-center">Visibility</th>
                   <th className="py-4 px-6 text-right">Actions</th>
                 </tr>
@@ -1100,16 +1053,6 @@ export default function AdminHeroPage() {
                         </div>
                       </td>
 
-                      {/* Price */}
-                      <td className="py-4 px-6 font-bold text-[#000000]">
-                        {slide.price || "—"}
-                      </td>
-
-                      {/* Link */}
-                      <td className="py-4 px-6 font-mono text-[11px] text-slate-600 max-w-xs truncate">
-                        {slide.link}
-                      </td>
-
                       {/* Visibility Toggle */}
                       <td className="py-4 px-6 text-center">
                         <button
@@ -1135,14 +1078,6 @@ export default function AdminHeroPage() {
                       {/* Action buttons */}
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <Link
-                            href={slide.link}
-                            target="_blank"
-                            className="p-2 rounded-xl bg-slate-100 hover:bg-[#FED501] hover:text-[#000000] text-slate-600 transition-colors"
-                            title="Preview Destination Link"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                          </Link>
                           <button
                             type="button"
                             onClick={() => handleOpenEdit(slide)}
@@ -1243,8 +1178,8 @@ export default function AdminHeroPage() {
                 </div>
               </div>
 
-              {/* Promo Badge, Tag & Price */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              {/* Promo Badge & Heritage Tag */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1.5">
                     Promo Badge *
@@ -1274,53 +1209,6 @@ export default function AdminHeroPage() {
                     }
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#000000]"
                   />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1.5">
-                    Price Tag
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. ₦58,000"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, price: e.target.value }))
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#000000] font-semibold text-[#000000]"
-                  />
-                </div>
-              </div>
-
-              {/* Destination Link with Suggestions */}
-              <div>
-                <label className="block font-bold text-slate-700 mb-1.5">
-                  CTA Button Destination Link *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="/products/alaari-crimson-metallic-gold-pinstripe-fila"
-                  value={formData.link}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, link: e.target.value }))
-                  }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-mono text-[11px] focus:outline-none focus:ring-2 focus:ring-[#000000] text-[#000000] font-semibold"
-                />
-
-                {/* Quick Link Selector Pills */}
-                <div className="flex items-center gap-1.5 flex-wrap mt-2">
-                  <span className="text-[10px] text-slate-400 font-semibold">Quick select:</span>
-                  {suggestedLinks.map((item) => (
-                    <button
-                      key={item.url}
-                      type="button"
-                      onClick={() => setFormData((prev) => ({ ...prev, link: item.url }))}
-                      className="px-2 py-0.5 rounded-md bg-slate-100 hover:bg-[#000000] hover:text-white text-slate-600 text-[10px] transition-colors cursor-pointer"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
                 </div>
               </div>
 
