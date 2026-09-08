@@ -140,6 +140,7 @@ ADMIN_SECRET_KEY="<64-char-random-hex-signing-secret>"
 
 # Dedicated throwaway sandbox credential for portfolio evaluators
 DEMO_ADMIN_PASSWORD="fila_demo_reviewer_2026"
+ENABLE_DEMO_LOGIN="true" # Set to "true" to activate 1-click sandbox access for reviewers
 
 # -------------------------------------------------------------
 # Transactional Email (Optional - logs to terminal if omitted)

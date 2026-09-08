@@ -1,13 +1,6 @@
+import "./mock-server-only.cjs";
 import "dotenv/config";
 import crypto from "node:crypto";
-
-// Standalone runner shim for server-only package
-const Module = require("module");
-const origRequire = Module.prototype.require;
-Module.prototype.require = function (path: string) {
-  if (path === "server-only") return {};
-  return origRequire.apply(this, arguments);
-};
 
 import { db } from "../src/server/db";
 import { redisGet } from "../src/server/redis";

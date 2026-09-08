@@ -100,8 +100,8 @@ export async function POST(req: Request) {
       }
     }
 
-    // B. Check for dedicated throwaway demo reviewer account
-    if (!authenticatedAdmin && targetEmail === "demo@filayoruba.com") {
+    // B. Check for dedicated throwaway demo reviewer account (only when ENABLE_DEMO_LOGIN is active)
+    if (!authenticatedAdmin && targetEmail === "demo@filayoruba.com" && process.env.ENABLE_DEMO_LOGIN === "true") {
       const demoPass = getDemoAdminPassword();
       if (timingSafeEqualStrings(password, demoPass)) {
         authenticatedAdmin = {

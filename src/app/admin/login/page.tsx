@@ -53,6 +53,7 @@ function LoginForm() {
       const res = await fetch("/api/admin/auth/demo-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: "fila_demo_reviewer_2026" }),
       });
 
       const data = await res.json();

@@ -135,7 +135,7 @@ export default function Hero({ slides }: HeroProps) {
                       sizes="(min-width: 1024px) 45vw, 100vw"
                       className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                       fallbackTitle={slide.title}
-                      fallbackSubtitle={slide.subtitle || slide.price || "Authentic Yoruba Fìlà"}
+                      fallbackSubtitle={slide.subtitle || "Authentic Yoruba Fìlà"}
                       fallbackBadge={slide.badge || "Signature Edition"}
                       fallbackVariant="lg"
                     />
@@ -144,31 +144,19 @@ export default function Hero({ slides }: HeroProps) {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/85 via-[#000000]/20 to-transparent" />
 
                     {/* Bottom Showcase Tag Info */}
-                    <div className="absolute bottom-6 left-6 right-6 text-white flex items-end justify-between">
-                      <div className="space-y-1 max-w-[65%]">
+                    <div className="absolute bottom-6 left-6 right-6 text-white">
+                      <div className="space-y-1 max-w-md">
                         <span className="inline-block text-[10px] uppercase tracking-widest text-[#FED501] font-bold bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full mb-1">
                           {slide.badge}
                         </span>
                         <h3 className="text-lg sm:text-xl font-bold font-serif leading-tight truncate">
                           {slide.title}
                         </h3>
-                        <span className="text-xs text-white/80 block truncate">
-                          {slide.subtitle}
-                        </span>
-                      </div>
-
-                      <div className="text-right shrink-0">
-                        {slide.price && (
-                          <span className="text-xl font-extrabold text-[#FED501] block">
-                            {slide.price}
+                        {slide.subtitle && (
+                          <span className="text-xs text-white/80 block truncate">
+                            {slide.subtitle}
                           </span>
                         )}
-                        <Link
-                          href={slide.link}
-                          className="text-[11px] font-bold text-white hover:underline inline-flex items-center gap-1 mt-0.5 group-hover:text-[#FED501] transition-colors"
-                        >
-                          View Cap →
-                        </Link>
                       </div>
                     </div>
                   </div>

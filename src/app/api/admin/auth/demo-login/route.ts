@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import {
   createSessionToken,
   ensureDefaultAdminUser,
+  getDemoAdminPassword,
+  timingSafeEqualStrings,
   ADMIN_COOKIE_NAME,
 } from "@/server/auth";
 import { checkRateLimitDistributed, getClientIp } from "@/server/rate-limit";
@@ -14,16 +16,52 @@ export const dynamic = "force-dynamic";
  * POST /api/admin/auth/demo-login
  * Provides 1-Click Sandbox access for portfolio reviewers and evaluators
  * without exposing or requiring any production administrator credentials.
+ * Gated strictly by ENABLE_DEMO_LOGIN="true".
  */
 export async function POST(req: Request) {
+  // 1. Guard: Demo login must be explicitly enabled via environment variable
+  if (process.env.ENABLE_DEMO_LOGIN !== "true") {
+    return NextResponse.json(
+      { message: "Demo login is disabled in this environment." },
+      { status: 403 }
+    );
+  }
+
   const ip = getClientIp(req);
 
-  // Distributed rate limiting for demo access (30 attempts per 15 minutes per IP)
+  // 2. Distributed rate limiting for demo access (30 attempts per 15 minutes per IP)
   const limit = await checkRateLimitDistributed(`demo_login:${ip}`, 30, 15 * 60 * 1000);
   if (!limit.success) {
     return NextResponse.json(
       { message: `Too many demo login requests. Please try again in ${limit.resetSeconds} seconds.` },
       { status: 429 }
+    );
+  }
+
+  // 3. Require password in request body and verify against getDemoAdminPassword()
+  let body: any = null;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { message: "Password is required for demo login." },
+      { status: 401 }
+    );
+  }
+
+  const { password } = body || {};
+  if (!password || typeof password !== "string") {
+    return NextResponse.json(
+      { message: "Password is required for demo login." },
+      { status: 401 }
+    );
+  }
+
+  const expectedPassword = getDemoAdminPassword();
+  if (!timingSafeEqualStrings(password, expectedPassword)) {
+    return NextResponse.json(
+      { message: "Invalid demo credentials." },
+      { status: 401 }
     );
   }
 
@@ -53,7 +91,7 @@ export async function POST(req: Request) {
       userId: reviewerPayload.id,
       userEmail: reviewerPayload.email,
       ipAddress: ip,
-      details: { role: reviewerPayload.role, note: "Instant 1-Click portfolio sandbox access" },
+      details: { role: reviewerPayload.role, note: "Verified 1-Click portfolio sandbox access" },
     });
 
     const response = NextResponse.json({

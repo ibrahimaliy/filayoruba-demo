@@ -35,21 +35,42 @@ const INSECURE_DEV_SECRETS = [
 
 export function getAdminSecret(): string {
   const secret = process.env.ADMIN_SECRET_KEY;
-  if (secret && secret.length >= 16 && !INSECURE_DEV_SECRETS.includes(secret)) {
+  const isInvalid = !secret || secret.length < 16 || INSECURE_DEV_SECRETS.includes(secret);
+
+  if (process.env.NODE_ENV === "production") {
+    if (isInvalid) {
+      throw new Error(
+        "[SECURITY CRITICAL] ADMIN_SECRET_KEY is missing, shorter than 16 characters, or matches a known insecure dev secret in production. Session signing is disabled."
+      );
+    }
     return secret;
   }
-  if (process.env.NODE_ENV === "production") {
-    console.warn("[SECURITY WARNING] ADMIN_SECRET_KEY is missing or weak in production environment variables. Using fallback.");
+
+  // Development: return safe dev secret if missing, too short, or in blocklist
+  if (isInvalid) {
+    return DEFAULT_DEV_ADMIN_SECRET;
   }
-  return secret || DEFAULT_DEV_ADMIN_SECRET;
+  return secret;
 }
 
 /**
  * Returns the human master admin password used for emergency recovery / seeding
  * Strictly checks ADMIN_PASSWORD without reusing ADMIN_SECRET_KEY.
+ * Fails closed in production if unset or insecure.
  */
 export function getMasterAdminPassword(): string {
   const pass = process.env.ADMIN_PASSWORD;
+  const isInvalid = !pass || pass.length < 12 || INSECURE_DEV_SECRETS.includes(pass);
+
+  if (process.env.NODE_ENV === "production") {
+    if (isInvalid) {
+      throw new Error(
+        "[SECURITY CRITICAL] ADMIN_PASSWORD is unset, shorter than 12 characters, or set to a known insecure value in production. Master admin password must be securely configured."
+      );
+    }
+    return pass;
+  }
+
   return pass || "";
 }
 

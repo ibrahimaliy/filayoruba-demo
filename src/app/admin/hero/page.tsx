@@ -722,18 +722,13 @@ export default function AdminHeroPage() {
                       fallbackVariant="lg"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute bottom-3 left-4 right-4 text-white flex items-end justify-between">
-                      <div className="max-w-[70%]">
+                    <div className="absolute bottom-3 left-4 right-4 text-white">
+                      <div>
                         <span className="text-[9px] uppercase tracking-widest text-[#FED501] font-bold bg-black/40 px-2 py-0.5 rounded-full">
                           {slide.badge}
                         </span>
                         <p className="text-sm font-bold truncate mt-1">{slide.title}</p>
                       </div>
-                      {slide.price && (
-                        <span className="text-sm font-extrabold text-[#FED501] shrink-0">
-                          {slide.price}
-                        </span>
-                      )}
                     </div>
                   </div>
                 ))}

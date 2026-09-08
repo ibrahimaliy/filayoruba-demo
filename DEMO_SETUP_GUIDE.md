@@ -70,6 +70,7 @@ git push -u origin main
    - `ADMIN_PASSWORD` (Strong random password for superadmin recovery)
    - `ADMIN_SECRET_KEY` (Strong 64-char random hex key for signing session tokens)
    - `DEMO_ADMIN_PASSWORD` (`fila_demo_reviewer_2026` throwaway password for portfolio evaluators)
+   - `ENABLE_DEMO_LOGIN` (`true` to enable the 1-click reviewer sandbox)
 3. Click **Deploy**.
 
 > 💡 **Reviewer Sandbox Note:** Reviewers evaluating your portfolio can use the built-in **"Instant 1-Click Demo Login"** on the admin login page (`/admin/login`). Your actual `ADMIN_PASSWORD` and `ADMIN_SECRET_KEY` remain 100% private.

@@ -17,8 +17,11 @@ export async function middleware(req: NextRequest) {
   let isAuthenticated = false;
   try {
     isAuthenticated = await validateAdminRequest(req);
-  } catch (err) {
-    console.warn('Middleware admin session check failed:', err);
+  } catch (err: any) {
+    if (err?.message?.includes("[SECURITY CRITICAL]")) {
+      throw err;
+    }
+    console.warn("Middleware admin session check failed:", err);
     isAuthenticated = false;
   }
 
